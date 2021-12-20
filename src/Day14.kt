@@ -2,7 +2,11 @@ fun main() {
 
 
     fun solveAt(input: List<String>, step: Int): Long {
-        var pairFrequencies = input.first().windowed(2).groupBy { it }.mapValues { it.value.size.toLong() }
+        var pairFrequencies = input.first()
+            .windowed(2)
+            .groupingBy { it }
+            .eachCount()
+            .mapValues { it.value.toLong() }
         val rules =
             input.subList(2, input.size).map { it.split(" -> ") }.associateBy({ it.first() }) { it.last().first() }
         repeat(step) {
@@ -10,11 +14,12 @@ fun main() {
         }
         val charFrequencies = pairFrequencies
             .flatMap { listOf(it.key.first() to it.value, it.key.last() to it.value) }
-            .groupBy({ it.first }) { it.second }
-            .mapValues { it.value.sum() / 2 }.toMutableMap()
+            .groupingBy { it.first }
+            .fold(0L) { accumulator, pair ->  accumulator + pair.second}
+            .toMutableMap()
         charFrequencies[input.first().first()] = charFrequencies[input.first().first()]!! + 1
         charFrequencies[input.first().last()] = charFrequencies[input.first().last()]!! + 1
-        return charFrequencies.values.maxOrNull()!! - charFrequencies.values.minOrNull()!!
+        return charFrequencies.values.maxOrNull()!! / 2 - charFrequencies.values.minOrNull()!! / 2
     }
 
     fun part1(input: List<String>): Long {

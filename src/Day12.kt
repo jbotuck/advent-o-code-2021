@@ -54,11 +54,11 @@ fun main() {
     println(part2(input))
 }
 
-data class Node(val name: String) {
+private data class Node(val name: String) {
     val isBig = name.first().isUpperCase()
 }
 
-data class Edge(val a: Node, val b: Node) {
+private data class Edge(val a: Node, val b: Node) {
     fun nextNodeFrom(s: String) = nextNodeFrom(Node(s))
 
     fun nextNodeFrom(from: Node): Node? {
